@@ -9,9 +9,10 @@ tpfand is written entirely in Python and licensed under the GNU GPL version 3.
 
 REQUIREMENTS
 ============
-Python 2.5
+Python 2.7  : by fork author
 DBus with bindings for Python
 thinkpad_acpi kernel module with fan control support
+python-dmidecode : by fork author
 
 NOTE: Some versions of the thinkpad_acpi module must be loaded
 	  with fan_control=1 to enable fan control. On some distributions
