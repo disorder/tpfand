@@ -21,6 +21,7 @@
 import sys, os, os.path
 import dbus, dbus.service, dbus.mainloop.glib, dbus.glib
 import gobject
+import dmidecode
 
 from tpfand import build
 
@@ -153,20 +154,15 @@ class Settings(dbus.service.Object):
     def read_model_info(self):
         """reads model info from HAL"""
         try:
-            bus = dbus.SystemBus()            
-            computer_obj = bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/devices/computer')
-            computer = dbus.Interface(computer_obj, 'org.freedesktop.Hal.Device')
-            
-            product_id = computer.GetProperty('system.hardware.vendor') + "_" + computer.GetProperty('system.hardware.product')
-            self.product_id = product_id.lower()
-            product_name = computer.GetProperty('system.hardware.vendor') + "_" + computer.GetProperty('system.hardware.version')
-            self.product_name = product_name.lower().replace('/', '-').replace(' ', '_')
-            
-            self.product_pretty_vendor = computer.GetProperty('system.hardware.vendor') 
-            self.product_pretty_name = computer.GetProperty('system.hardware.version')
-            self.product_pretty_id = computer.GetProperty('system.hardware.product')
+            info = dmidecode.system()['0x0001']['data']
+            """ TODO: hardcode here!!! to remove later """
+            self.product_id = info['Manufacturer'] + '_' + info['Product Name']
+            self.product_name = info['Manufacturer'] + '_' + info['Version']
+            self.product_pretty_vendor = info['Manufacturer']
+            self.product_pretty_name = info['Version']
+            self.product_pretty_id = info['Product Name']
         except:
-            print "Warning: unable to get your system model from HAL."
+            print "Warning: unable to get your system model from DMI."
             self.product_id = None
             self.product_name = None
             self.product_pretty_vendor = None
