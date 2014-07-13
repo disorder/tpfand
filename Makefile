@@ -12,8 +12,8 @@ clean:
 	rm -f src/tpfand/*.pyc
 
 install: all
-	install -d $(DESTDIR)/usr/lib/python2.5/site-packages/tpfand
-	install src/tpfand/* $(DESTDIR)/usr/lib/python2.5/site-packages/tpfand
+	install -d $(DESTDIR)/usr/lib/python2.7/site-packages/tpfand
+	install src/tpfand/* $(DESTDIR)/usr/lib/python2.7/site-packages/tpfand
 	install -d $(DESTDIR)/usr/share/tpfand/
 	install -d $(DESTDIR)/usr/share/tpfand/models
 	install -d $(DESTDIR)/usr/share/tpfand/models/by-id
@@ -36,7 +36,7 @@ install: all
 	echo You still need to create links to the init script. 
 
 uninstall:
-	rm -rf $(DESTDIR)/usr/lib/python2.5/site-packages/tpfand
+	rm -rf $(DESTDIR)/usr/lib/python2.7/site-packages/tpfand
 	rm -rf $(DESTDIR)/usr/share/tpfand/
 	rm -f $(DESTDIR)/usr/sbin/tpfand
 	rm -f $(DESTDIR)/etc/init.d/tpfand
