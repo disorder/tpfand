@@ -85,14 +85,21 @@ class Control(dbus.service.Object):
     @dbus.service.method("org.thinkpad.fancontrol.Control", in_signature='', out_signature='s')         
     def get_version(self):
         return build.version
-    
+
+    @staticmethod
+    def read_elements():
+        elements = []
+        for i in xrange(0,4):
+            tempfile = open('/sys/class/thermal/thermal_zone%d/temp' % i, 'r')
+            elements.append(int(tempfile.readline())/1000.0)
+            tempfile.close()
+        return elements
+
     @dbus.service.method('org.thinkpad.fancontrol.Control', in_signature='', out_signature='ai')
     def get_temperatures(self):
         """returns list of current sensor readings, +/-128 means sensor is disconnected"""
         try:
-            tempfile = open('/proc/acpi/ibm/thermal', 'r')
-            elements = tempfile.readline().split()[1:]
-            tempfile.close()
+            elements = Control.read_elements()
             return map(int, elements)
         except IOError, e:
             # sometimes read fails during suspend/resume        
@@ -282,9 +289,7 @@ def is_system_suitable():
         fanfile.flush()
         fanfile.close()
         
-        tempfile = open('/proc/acpi/ibm/thermal', 'r')
-        tempfile.readline()
-        tempfile.close()
+        Control.read_elements()
         return True
     except IOError:
         return False         
@@ -363,4 +368,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
